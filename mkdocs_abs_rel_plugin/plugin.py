@@ -18,13 +18,14 @@ class AbsToRelPlugin(BasePlugin):
 
     DEFAULT_ROOT_FOLDER = "docs"
 
-    config_scheme = ()
+    config_scheme = (("root_dir", config_options.Type(str, default=None)),)
 
     def on_page_markdown(
         self, markdown, page: Page = None, config: Config = None, **kwargs
     ):
         abs_src_path = Path(page.file.abs_src_path)
         doc_folder = Path(config.data.get("docs_dir"))
+        root_dir = self.config["root_dir"] or doc_folder
 
-        new_md = _absolute_to_rel(markdown, abs_src_path, doc_folder)
+        new_md = _absolute_to_rel(markdown, abs_src_path, root_dir)
         return new_md
